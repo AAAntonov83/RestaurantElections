@@ -1,5 +1,6 @@
 package com.restaurant_elections.model;
 
+import com.restaurant_elections.util.validation.NoHtml;
 import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.validation.constraints.NotBlank;
@@ -14,6 +15,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public abstract class NamedEntity extends BaseEntity {
+    @NoHtml
     @NotBlank
     @Size(min = 2, max = 128)
     @Column(name = "name", nullable = false)

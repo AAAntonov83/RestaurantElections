@@ -3,6 +3,7 @@ package com.restaurant_elections.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.restaurant_elections.HasIdAndEmail;
+import com.restaurant_elections.util.validation.NoHtml;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -25,6 +26,7 @@ import java.util.*;
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User extends NamedEntity implements HasIdAndEmail {
+    @NoHtml
     @Column(name = "email", nullable = false, unique = true)
     @Email
     @NotBlank
