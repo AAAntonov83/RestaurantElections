@@ -9,8 +9,10 @@ import com.restaurant_elections.repository.RestaurantRepository;
 import com.restaurant_elections.repository.VoteRepository;
 import com.restaurant_elections.web.AuthUser;
 import com.restaurant_elections.web.vote.VoteController;
+import io.swagger.v3.oas.annotations.Hidden;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -75,6 +77,8 @@ public class RestaurantController {
         return ResponseEntity.of(Optional.of(vote));
     }
 
+    @Hidden
+    @Profile("!test")
     @PostMapping(value = "/{id}/test-votes", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Vote> vote(@AuthenticationPrincipal AuthUser authUser, @PathVariable int id, @RequestBody Vote vote) {
