@@ -1,0 +1,55 @@
+package com.restaurant_elections.web.user;
+
+import com.restaurant_elections.model.User;
+import com.restaurant_elections.to.UserTo;
+import com.restaurant_elections.util.UsersUtil;
+import com.restaurant_elections.web.AuthUser;
+import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.*;
+
+import static com.restaurant_elections.util.validation.ValidationUtil.assureIdConsistent;
+import static com.restaurant_elections.util.validation.ValidationUtil.checkNew;
+
+@RestController
+@RequestMapping(ProfileController.REST_URL)
+@Slf4j
+@AllArgsConstructor
+public class ProfileController extends AbstractUserController{
+    static final String REST_URL = "/api/profile";
+
+    @GetMapping
+    public User get(@AuthenticationPrincipal AuthUser authUser) {
+        log.info("get {}", authUser);
+        return authUser.getUser();
+    }
+
+    @DeleteMapping
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@AuthenticationPrincipal AuthUser authUser) {
+        super.delete(authUser.id());
+    }
+
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.CREATED)
+    public User register(@Valid @RequestBody UserTo userTo) {
+        log.info("register {}", userTo);
+        checkNew(userTo);
+        return repository.prepareAndSave(UsersUtil.createNewFromTo(userTo));
+    }
+
+    @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Transactional
+    public void update(@RequestBody @Valid UserTo userTo, @AuthenticationPrincipal AuthUser authUser) {
+        log.info("update {} with id={}", userTo, authUser.id());
+        assureIdConsistent(userTo, authUser.id());
+        User user = authUser.getUser();
+        repository.prepareAndSave(UsersUtil.updateFromTo(user, userTo));
+    }
+}
