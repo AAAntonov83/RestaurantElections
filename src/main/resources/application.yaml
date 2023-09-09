@@ -1,1 +1,9 @@
-
+spring:
+  jpa:
+    show-sql: true
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+        default_batch_fetch_size: 20
+        jdbc.batch_size: 20
