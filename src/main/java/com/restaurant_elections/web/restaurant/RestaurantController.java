@@ -3,6 +3,7 @@ package com.restaurant_elections.web.restaurant;
 import com.restaurant_elections.error.IllegalRequestDataException;
 import com.restaurant_elections.model.Menu;
 import com.restaurant_elections.model.Restaurant;
+import com.restaurant_elections.model.User;
 import com.restaurant_elections.model.Vote;
 import com.restaurant_elections.repository.MenuRepository;
 import com.restaurant_elections.repository.RestaurantRepository;
@@ -60,21 +61,7 @@ public class RestaurantController {
     @PostMapping("/{id}/votes")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Vote> vote(@AuthenticationPrincipal AuthUser authUser, @PathVariable int id) {
-        log.info("restaurant {} {} vote", id, authUser);
-        Restaurant restaurant = restaurantRepository.getByIdWithCurrentMenuOnly(id)
-                .orElseThrow(() -> new IllegalRequestDataException("This restaurant havent menu today"));
-        Vote vote = voteRepository.getByUserToday(authUser.getUser()).orElse(new Vote(null, null, authUser.getUser()));
-        LocalDateTime currentDateTime = LocalDateTime.now();
-        if (vote.isNew() || currentDateTime.isBefore(atStartOfDay().plusHours(11))) {
-            vote.setDatetime(currentDateTime);
-            vote.setRestaurant(restaurant);
-            Vote created = voteRepository.save(vote);
-            URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
-                    .path(VoteController.REST_URL + "/votes/{voteId}")
-                    .buildAndExpand(created.getId()).toUri();
-            return ResponseEntity.created(uriOfNewResource).body(created);
-        }
-        return ResponseEntity.of(Optional.of(vote));
+        return processVote(authUser.getUser(), id, LocalDateTime.now());
     }
 
     @Hidden
@@ -82,19 +69,23 @@ public class RestaurantController {
     @PostMapping(value = "/{id}/test-votes", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Vote> vote(@AuthenticationPrincipal AuthUser authUser, @PathVariable int id, @RequestBody Vote vote) {
-        log.info("restaurant {} {} vote", id, authUser);
-        Restaurant restaurant = restaurantRepository.getByIdWithCurrentMenuOnly(id)
-                .orElseThrow(() -> new IllegalRequestDataException("This restaurant havent menu today"));
-        Vote oldVote = voteRepository.getByUserToday(authUser.getUser()).orElse(new Vote(null, null, authUser.getUser()));
-        if (oldVote.isNew() || vote.getDatetime().isBefore(atStartOfDay().plusHours(11))) {
-            oldVote.setDatetime(vote.getDatetime());
-            oldVote.setRestaurant(restaurant);
-            Vote created = voteRepository.save(oldVote);
+        return processVote(authUser.getUser(), id, vote.getDatetime());
+    }
+
+    private ResponseEntity<Vote> processVote(User user, int restaurantId, LocalDateTime voteDateTime) {
+        log.info("restaurant {} {} vote", restaurantId, user);
+        Restaurant restaurant = restaurantRepository.getByIdWithCurrentMenuOnly(restaurantId)
+                .orElseThrow(() -> new IllegalRequestDataException("This restaurant not exist or havent menu today"));
+        Vote vote = voteRepository.getByUserToday(user).orElse(new Vote(null, null, user));
+        if (vote.isNew() || voteDateTime.isBefore(atStartOfDay().plusHours(11))) {
+            vote.setDatetime(voteDateTime);
+            vote.setRestaurant(restaurant);
+            vote = voteRepository.save(vote);
             URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                     .path(VoteController.REST_URL + "/{voteId}")
-                    .buildAndExpand(created.getId()).toUri();
-            return ResponseEntity.created(uriOfNewResource).body(created);
+                    .buildAndExpand(vote.getId()).toUri();
+            return ResponseEntity.created(uriOfNewResource).body(vote);
         }
-        return ResponseEntity.of(Optional.of(oldVote));
+        return ResponseEntity.ok(vote);
     }
 }
