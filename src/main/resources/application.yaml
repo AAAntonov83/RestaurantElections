@@ -30,3 +30,5 @@ server.servlet:
     charset: UTF-8
     enabled: true
     force: true
+
+springdoc.swagger-ui.path: /
