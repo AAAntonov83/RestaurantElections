@@ -20,7 +20,13 @@ import org.springframework.context.annotation.Configuration;
         info = @Info(
                 title = "REST API documentation",
                 version = "1.0",
-                description = "Restaurant election's app",
+                description =
+                    """
+                    Restaurant election's app
+                            <p><b>Credentials:</b><br>
+                            user@gmail.com / password<br>
+                            admin@gmail.com / admin<br>
+                            guest@gmail.com / guest (user without votes)</p>""",
                 contact = @Contact( name = "Andrei Antonov", email = "aaakuzbass@gmail.com")
         ),
         security = @SecurityRequirement(name = "basicAuth")
