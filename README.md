@@ -17,7 +17,7 @@ Build a voting system for deciding where to have lunch.
 
 Each restaurant provides a new menu each day.
 
-<a>Swagger</a><br>
+<a href="http://localhost:8080/">Swagger</a><br>
 Credentials:<br>
 user@gmail.com / password<br>
 admin@gmail.com / admin<br>
