@@ -9,10 +9,10 @@ VALUES ('USER', 1),
        ('USER', 2),
        ('USER', 3);
 
-INSERT INTO meal (name, price)
-VALUES ('MEAL_1', 10),
-       ('MEAL_2', 15),
-       ('MEAL_3', 20);
+INSERT INTO dish (name, price)
+VALUES ('DISH_1', 10),
+       ('DISH_2', 15),
+       ('DISH_3', 20);
 
 INSERT INTO restaurant (name)
 VALUES ('RESTAURANT_1'),
@@ -25,7 +25,7 @@ VALUES (1, DATEADD(DAY , -1, DATE_TRUNC(DAY, now()))),
        (1, DATE_TRUNC(DAY, now())),
        (2, DATE_TRUNC(DAY, now()));
 
-INSERT INTO menu_meals (menu_id, meal_id)
+INSERT INTO menu_dishes (menu_id, dish_id)
 VALUES (1, 1),
        (1, 2),
        (2, 1),

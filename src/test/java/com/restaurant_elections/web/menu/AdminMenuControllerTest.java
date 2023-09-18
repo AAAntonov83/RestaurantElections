@@ -9,7 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import static com.restaurant_elections.web.meal.MealTestData.*;
+import static com.restaurant_elections.web.dish.DishTestData.*;
 import static com.restaurant_elections.web.menu.AdminMenuController.REST_URL;
 import static com.restaurant_elections.web.menu.MenuTestData.*;
 import static com.restaurant_elections.web.user.UserTestData.ADMIN_MAIL;
@@ -62,21 +62,21 @@ public class AdminMenuControllerTest extends AbstractControllerTest {
 
     @Test
     @WithUserDetails(ADMIN_MAIL)
-    void includeMeal() throws Exception {
-        Menu menu = new Menu(MENU_1_ID, MENU_1.getDate(), MEAL_1, MEAL_2, MEAL_3);
-        perform(MockMvcRequestBuilders.post(REST_URL_SLASH + MENU_1_ID + "/include-meal/" + MEAL_3_ID))
+    void includeDish() throws Exception {
+        Menu menu = new Menu(MENU_1_ID, MENU_1.getDate(), DISH_1, DISH_2, DISH_3);
+        perform(MockMvcRequestBuilders.post(REST_URL_SLASH + MENU_1_ID + "/include-dish/" + DISH_3_ID))
                 .andExpect(status().isNoContent());
-        assertEquals(menu, repository.getByIdWithMeals(MENU_1_ID).orElse(null));
+        assertEquals(menu, repository.getByIdWithDishes(MENU_1_ID).orElse(null));
     }
 
     @Test
     @WithUserDetails(ADMIN_MAIL)
-    void excludeMeal() throws Exception {
-        Menu menu = new Menu(MENU_1_ID, MENU_1.getDate(), MEAL_2);
-        perform(MockMvcRequestBuilders.post(REST_URL_SLASH + MENU_1_ID + "/exclude-meal/" + MEAL_1_ID))
+    void excludeDish() throws Exception {
+        Menu menu = new Menu(MENU_1_ID, MENU_1.getDate(), DISH_2);
+        perform(MockMvcRequestBuilders.post(REST_URL_SLASH + MENU_1_ID + "/exclude-dish/" + DISH_1_ID))
                 .andExpect(status().isNoContent());
 
-        assertEquals(menu, repository.getByIdWithMeals(MENU_1_ID).orElse(null));
+        assertEquals(menu, repository.getByIdWithDishes(MENU_1_ID).orElse(null));
     }
 
     @Test

@@ -1,9 +1,9 @@
 package com.restaurant_elections.web.menu;
 
 import com.restaurant_elections.error.NotFoundException;
-import com.restaurant_elections.model.Meal;
+import com.restaurant_elections.model.Dish;
 import com.restaurant_elections.model.Menu;
-import com.restaurant_elections.repository.MealRepository;
+import com.restaurant_elections.repository.DishRepository;
 import com.restaurant_elections.repository.MenuRepository;
 import com.restaurant_elections.web.AuthUser;
 import lombok.AllArgsConstructor;
@@ -21,12 +21,12 @@ import org.springframework.web.bind.annotation.*;
 public class AdminMenuController {
     static final String REST_URL = "/api/admin/menus";
     private final MenuRepository menuRepository;
-    private final MealRepository mealRepository;
+    private final DishRepository dishRepository;
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Menu> get(@AuthenticationPrincipal AuthUser authUser, @PathVariable int id) {
         log.info("Menu {} requested by {}", id, authUser);
-        return ResponseEntity.of(menuRepository.getByIdWithMeals(id));
+        return ResponseEntity.of(menuRepository.findById(id));
     }
 
     @DeleteMapping("/{id}")
@@ -36,22 +36,22 @@ public class AdminMenuController {
         menuRepository.deleteExisted(id);
     }
 
-    @PostMapping(value = "/{menuId}/include-meal/{mealId}")
+    @PostMapping(value = "/{menuId}/include-dish/{dishId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void includeMeal(@AuthenticationPrincipal AuthUser authUser, @PathVariable int menuId, @PathVariable int mealId) {
-        log.info("Meal id={} include to Menu id={} by {}", mealId, menuId, authUser);
-        Menu menu = menuRepository.getByIdWithMeals(menuId).orElseThrow(() -> new NotFoundException("Menu with id=" + menuId + " not found"));
-        Meal meal = mealRepository.getExisted(mealId);
-        menu.addMeal(meal);
+    public void includeDish(@AuthenticationPrincipal AuthUser authUser, @PathVariable int menuId, @PathVariable int dishId) {
+        log.info("Dish id={} include to Menu id={} by {}", dishId, menuId, authUser);
+        Menu menu = menuRepository.getByIdWithDishes(menuId).orElseThrow(() -> new NotFoundException("Menu with id=" + menuId + " not found"));
+        Dish dish = dishRepository.getExisted(dishId);
+        menu.addDish(dish);
         menuRepository.save(menu);
     }
 
-    @PostMapping("/{menuId}/exclude-meal/{mealId}")
+    @PostMapping("/{menuId}/exclude-dish/{dishId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void excludeMeal(@AuthenticationPrincipal AuthUser authUser, @PathVariable int menuId, @PathVariable int mealId) {
-        log.info("Meal {} exclude from Menu {} by {}", mealId, menuId, authUser);
-        Menu menu = menuRepository.getByIdWithMeals(menuId).orElseThrow(() -> new NotFoundException("Menu with id=" + menuId + " not found"));
-        menu.getMeals().removeIf(meal -> meal.id() == mealId);
+    public void excludeDish(@AuthenticationPrincipal AuthUser authUser, @PathVariable int menuId, @PathVariable int dishId) {
+        log.info("Dish {} exclude from Menu {} by {}", dishId, menuId, authUser);
+        Menu menu = menuRepository.getByIdWithDishes(menuId).orElseThrow(() -> new NotFoundException("Menu with id=" + menuId + " not found"));
+        menu.getDishes().removeIf(dish -> dish.id() == dishId);
         menuRepository.save(menu);
     }
 }

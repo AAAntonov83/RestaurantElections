@@ -12,6 +12,7 @@ public class RestaurantTestData {
     public static final int RESTAURANT_NOT_FOUND_ID = 100;
     public static final Restaurant RESTAURANT_1 = new Restaurant(RESTAURANT_1_ID, "RESTAURANT_1");
     public static final Restaurant RESTAURANT_2 = new Restaurant(RESTAURANT_2_ID, "RESTAURANT_2");
+    public static final Restaurant RESTAURANT_WITHOUT_MENU = new Restaurant(RESTAURANT_WITHOUT_MENU_AND_VOTE_ID, "RESTAURANT_WITHOUT_MENU");
 
     public static Restaurant getNew() {
         return new Restaurant(null, "NewRestaurant");

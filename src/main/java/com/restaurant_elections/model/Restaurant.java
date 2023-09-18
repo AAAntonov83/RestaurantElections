@@ -1,7 +1,6 @@
 package com.restaurant_elections.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.restaurant_elections.HasId;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -17,17 +16,15 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Restaurant extends NamedEntity implements HasId {
+public class Restaurant extends NamedEntity {
 
     @JsonIgnore
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "restaurant_id")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Vote> votes;
 
     @JsonIgnore
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "restaurant_id")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Menu> menus;
 

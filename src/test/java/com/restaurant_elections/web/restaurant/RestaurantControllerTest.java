@@ -23,7 +23,8 @@ import static com.restaurant_elections.web.restaurant.RestaurantController.REST_
 import static com.restaurant_elections.web.restaurant.RestaurantTestData.*;
 import static com.restaurant_elections.web.user.UserTestData.GUEST_MAIL;
 import static com.restaurant_elections.web.user.UserTestData.USER_MAIL;
-import static com.restaurant_elections.web.vote.VoteTestData.*;
+import static com.restaurant_elections.web.vote.VoteTestData.VOTE_4;
+import static com.restaurant_elections.web.vote.VoteTestData.VOTE_MATCHER;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -36,7 +37,7 @@ public class RestaurantControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(USER_MAIL)
     void getAllHavingMenuToday() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL))
+        perform(MockMvcRequestBuilders.get(REST_URL + "/with-menu"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(RESTAURANT_MATCHER.contentJson(List.of(RESTAURANT_1, RESTAURANT_2)));

@@ -21,22 +21,19 @@ import java.util.List;
 public class Menu extends BaseEntity {
 
     @JsonIgnore
-    @Column(name = "restaurant_id")
-    private int restaurantId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "restaurant_id")
+    private Restaurant restaurant;
 
     @Column(name = "date", nullable = false, columnDefinition = "timestamp default now()")
     private LocalDate date;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "menu_meals",
-            joinColumns = { @JoinColumn(name = "menu_id")},
-            inverseJoinColumns = { @JoinColumn(name = "meal_id")}
-    )
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "menus")
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private List<Meal> meals;
+    private List<Dish> dishes;
 
-    public void addMeal(Meal meal) {
-        meals.add(meal);
+    public void addDish(Dish dish) {
+        dishes.add(dish);
     }
 
     public Menu(Integer id, LocalDate date) {
@@ -44,14 +41,14 @@ public class Menu extends BaseEntity {
         this.date = date;
     }
 
-    public Menu(Integer id, LocalDate date, Meal... meals) {
+    public Menu(Integer id, LocalDate date, Dish... dishes) {
         super(id);
         this.date = date;
-        this.meals = List.of(meals);
+        this.dishes = List.of(dishes);
     }
 
     @Override
     public String toString() {
-        return "Menu: " + id + ", {date=" + date + ", meals=" + meals + "}";
+        return "Menu: " + id + ", date=" + date + "}";
     }
 }

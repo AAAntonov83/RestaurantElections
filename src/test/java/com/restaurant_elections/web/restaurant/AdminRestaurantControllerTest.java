@@ -37,6 +37,15 @@ public class AdminRestaurantControllerTest extends AbstractControllerTest {
 
     @Test
     @WithUserDetails(ADMIN_MAIL)
+    void getAll() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(RESTAURANT_MATCHER.contentJson(List.of(RESTAURANT_1, RESTAURANT_2, RESTAURANT_WITHOUT_MENU)));
+    }
+
+    @Test
+    @WithUserDetails(ADMIN_MAIL)
     void create() throws Exception {
         Restaurant restaurant = RestaurantTestData.getNew();
         ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL)

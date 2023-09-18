@@ -34,6 +34,12 @@ public class AdminRestaurantController {
     private final MenuRepository menuRepository;
     private final VoteRepository voteRepository;
 
+    @GetMapping()
+    public List<Restaurant> getAll(@AuthenticationPrincipal AuthUser authUser) {
+        log.info("find all restaurants for {}", authUser);
+        return restaurantRepository.findAll();
+    }
+
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Restaurant> create(@AuthenticationPrincipal AuthUser authUser, @Valid @RequestBody Restaurant restaurant) {
@@ -61,7 +67,6 @@ public class AdminRestaurantController {
     @Transactional
     public void delete(@AuthenticationPrincipal AuthUser authUser, @PathVariable int id) {
         log.info("Restaurant id={} delete by {}", id, authUser);
-        menuRepository.findAllByRestaurantWithMeals(id).forEach(menu -> menuRepository.delete(menu.id()));
         restaurantRepository.deleteExisted(id);
     }
 
@@ -77,8 +82,7 @@ public class AdminRestaurantController {
     public ResponseEntity<Menu> createMenu(@AuthenticationPrincipal AuthUser authUser, @PathVariable int id, @Valid  @RequestBody Menu menu) {
         log.info("Menu {} for restaurant {} create by {}", menu, id, authUser);
         checkNew(menu);
-        Restaurant restaurant = restaurantRepository.getExisted(id);
-        menu.setRestaurantId(restaurant.id());
+        menu.setRestaurant(restaurantRepository.getExisted(id));
         Menu created = menuRepository.save(menu);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(RestaurantController.REST_URL + "/{id}")
@@ -91,8 +95,7 @@ public class AdminRestaurantController {
     public void updateMenu(@AuthenticationPrincipal AuthUser authUser, @PathVariable int restaurantId, @PathVariable int menuId, @Valid  @RequestBody Menu menu) {
         log.info("Menu {} for restaurant {} update by {}", menu, restaurantId, authUser);
         assureIdConsistent(menu, menuId);
-        Restaurant restaurant = restaurantRepository.getExisted(restaurantId);
-        menu.setRestaurantId(restaurant.id());
+        menu.setRestaurant(restaurantRepository.getExisted(restaurantId));
         menuRepository.save(menu);
     }
 

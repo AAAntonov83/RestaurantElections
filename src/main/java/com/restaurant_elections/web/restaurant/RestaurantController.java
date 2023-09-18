@@ -38,7 +38,7 @@ public class RestaurantController {
     private final MenuRepository menuRepository;
     private final VoteRepository voteRepository;
 
-    @GetMapping
+    @GetMapping("/with-menu")
     public List<Restaurant> getAllWithCurrentMenuOnly(@AuthenticationPrincipal AuthUser authUser) {
         log.info("find all restaurants with current menu for {}", authUser);
         return restaurantRepository.findAllWithCurrentMenuOnly();
