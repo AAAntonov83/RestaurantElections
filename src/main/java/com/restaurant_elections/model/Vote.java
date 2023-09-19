@@ -16,11 +16,12 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Vote extends BaseEntity{
 
-    @JsonIgnore
+    //@JsonIgnore
     @ManyToOne(fetch =  FetchType.LAZY)
     @JoinColumn(name = "restaurant_id", nullable = false)
     private Restaurant restaurant;
 
+    @JsonIgnore
     @ManyToOne(fetch =  FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
@@ -33,9 +34,10 @@ public class Vote extends BaseEntity{
         this.datetime = datetime;
     }
 
-    public Vote(Integer id, LocalDateTime datetime, User user) {
+    public Vote(Integer id, LocalDateTime datetime, Restaurant restaurant, User user) {
         super(id);
         this.datetime = datetime;
+        this.restaurant = restaurant;
         this.user = user;
     }
 

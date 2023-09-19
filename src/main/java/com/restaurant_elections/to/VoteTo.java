@@ -7,9 +7,9 @@ import lombok.Value;
 @Value
 public class VoteTo {
     @NotNull
-    int restaurant_id;
+    int restaurantId;
 
-    public VoteTo(@JsonProperty("restaurant_id") int restaurant_id) {
-        this.restaurant_id = restaurant_id;
+    public VoteTo(@JsonProperty("restaurantId") int restaurantId) {
+        this.restaurantId = restaurantId;
     }
 }

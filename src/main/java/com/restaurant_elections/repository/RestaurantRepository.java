@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -12,19 +13,9 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public interface RestaurantRepository extends BaseRepository<Restaurant> {
 
-    @Query(value =
-            """
-            SELECT r.id, r.name 
-            FROM Restaurant r RIGHT JOIN Menu m 
-            ON r.id = m.restaurant_id 
-            WHERE m.date = DATE_TRUNC(DAY, NOW())""", nativeQuery = true)
-    List<Restaurant> findAllWithCurrentMenuOnly();
+    @Query("SELECT m.restaurant FROM Menu m WHERE m.date = :date")
+    List<Restaurant> findAllWithMenuOnDate(LocalDate date);
 
-    @Query(value =
-            """
-            SELECT r.id, r.name 
-            FROM Restaurant r RIGHT JOIN Menu m 
-            ON r.id = m.restaurant_id 
-            WHERE r.id = :id AND m.date = DATE_TRUNC(DAY, NOW())""", nativeQuery = true)
-    Optional<Restaurant> getByIdWithCurrentMenuOnly(int id);
+    @Query("SELECT m.restaurant FROM Menu m WHERE m.date = :date AND m.restaurant.id = :id")
+    Optional<Restaurant> getByIdWithMenuOnDateOnly(int id, LocalDate date);
 }

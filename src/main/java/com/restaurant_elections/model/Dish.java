@@ -4,10 +4,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.List;
+import java.util.Set;
 
 @Entity
-@Table(name = "dish", uniqueConstraints = {@UniqueConstraint(columnNames = {"name"}, name = "dish_name_unique")})
+@Table(name = "dish", uniqueConstraints = {@UniqueConstraint(columnNames = {"name", "restaurant_id"}, name = "restaurant_name_unique")})
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -16,12 +16,17 @@ public class Dish extends NamedEntity {
 
     @ToString.Exclude
     @JsonIgnore
+    @Column(name = "restaurant_id")
+    private int restaurantId;
+
+    @ToString.Exclude
+    @JsonIgnore
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "menu_dishes",
             joinColumns = { @JoinColumn(name = "dish_id")},
             inverseJoinColumns = { @JoinColumn(name = "menu_id")}
     )
-    private List<Menu> menus;
+    private Set<Menu> menus;
 
     @Column
     private int price;
