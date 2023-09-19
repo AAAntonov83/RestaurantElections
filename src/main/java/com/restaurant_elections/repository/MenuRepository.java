@@ -1,6 +1,7 @@
 package com.restaurant_elections.repository;
 
 import com.restaurant_elections.model.Menu;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -30,6 +31,7 @@ public interface MenuRepository extends BaseRepository<Menu> {
     @Query("SELECT m FROM Menu m WHERE m.restaurant.id = :id ORDER BY m.date DESC")
     List<Menu> findAllByRestaurant(int id);
 
+    @CacheEvict(value = "restaurants", allEntries = true)
     @Transactional
     @Modifying
     @Query("DELETE FROM Menu m WHERE m.id = :id AND m.restaurant.id = :restaurantId")

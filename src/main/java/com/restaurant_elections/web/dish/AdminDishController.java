@@ -10,6 +10,7 @@ import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -75,6 +76,7 @@ public class AdminDishController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @CacheEvict(value = "restaurants", allEntries = true)
     public void delete(@AuthenticationPrincipal AuthUser authUser, @PathVariable int restaurantId,
                        @PathVariable int id) {
         log.info("Dish {} Restaurant id={} delete by {}", id, restaurantId, authUser);

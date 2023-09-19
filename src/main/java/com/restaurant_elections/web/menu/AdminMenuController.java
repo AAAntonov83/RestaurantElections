@@ -16,6 +16,7 @@ import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -58,6 +59,7 @@ public class AdminMenuController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
+    @CacheEvict(value = "restaurants", allEntries = true)
     public ResponseEntity<MenuTo> create(@AuthenticationPrincipal AuthUser authUser,
                                        @PathVariable int restaurantId, @Valid @RequestBody MenuTo menuTo) {
         log.info("Menu {} for restaurant id={} create by {}", menuTo, restaurantId, authUser);
@@ -74,6 +76,7 @@ public class AdminMenuController {
     @PutMapping(value = "/{menuId}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Transactional
+    @CacheEvict(value = "restaurants", allEntries = true)
     public void update(@AuthenticationPrincipal AuthUser authUser, @PathVariable int restaurantId,
                        @PathVariable int menuId, @Valid  @RequestBody MenuTo menuTo) {
         log.info("Menu {} for restaurant {} update by {}", menuTo, restaurantId, authUser);
@@ -85,6 +88,7 @@ public class AdminMenuController {
 
     @DeleteMapping("/{menuId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @CacheEvict(value = "restaurants", allEntries = true)
     public void delete(@AuthenticationPrincipal AuthUser authUser,
                        @PathVariable int restaurantId,  @PathVariable int menuId) {
         log.info("Menu {} delete by {}", menuId, authUser);
@@ -110,6 +114,7 @@ public class AdminMenuController {
     @PostMapping(value = "/{menuId}/dishes/{dishId}")
     @ResponseStatus(HttpStatus.CREATED)
     @Transactional
+    @CacheEvict(value = "restaurants", allEntries = true)
     public void includeDish(@AuthenticationPrincipal AuthUser authUser, @PathVariable int restaurantId,
                             @PathVariable int menuId, @PathVariable int dishId) {
         log.info("Dish id={} include to Menu id={} by {}", dishId, menuId, authUser);
@@ -121,6 +126,7 @@ public class AdminMenuController {
     @DeleteMapping("/{menuId}/dishes/{dishId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Transactional
+    @CacheEvict(value = "restaurants", allEntries = true)
     public void excludeDish(@AuthenticationPrincipal AuthUser authUser, @PathVariable int restaurantId,
                             @PathVariable int menuId, @PathVariable int dishId) {
         log.info("Dish {} exclude from Menu {} by {}", dishId, menuId, authUser);

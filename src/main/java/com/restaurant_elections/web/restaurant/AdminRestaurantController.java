@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -53,6 +54,7 @@ public class AdminRestaurantController {
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Transactional
+    @CacheEvict(value = "restaurants", allEntries = true)
     public void update(@AuthenticationPrincipal AuthUser authUser, @PathVariable int id, @Valid @RequestBody RestaurantTo updated) {
         log.info("Restaurant {} update by user {}", updated, authUser.id());
         assureIdConsistent(updated, id);
@@ -61,6 +63,7 @@ public class AdminRestaurantController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @CacheEvict(value = "restaurants", allEntries = true)
     public void delete(@AuthenticationPrincipal AuthUser authUser, @PathVariable int id) {
         log.info("Restaurant id={} delete by {}", id, authUser);
         restaurantRepository.deleteExisted(id);

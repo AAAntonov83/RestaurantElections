@@ -4,6 +4,7 @@ import com.restaurant_elections.model.User;
 import com.restaurant_elections.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 
@@ -26,6 +27,7 @@ public class AbstractUserController {
         return repository.getExisted(id);
     }
 
+    @CacheEvict(value = "users", allEntries = true)
     public void delete(int id) {
         log.info("delete {}", id);
         repository.deleteExisted(id);

@@ -31,6 +31,7 @@ public class RestaurantController {
     private final MenuRepository menuRepository;
 
     @GetMapping("/with-menu")
+
     public List<Restaurant> getAllWithMenuOnTodayOnly(@AuthenticationPrincipal AuthUser authUser) {
         log.info("find all restaurants with current menu for {}", authUser);
         return restaurantRepository.findAllWithMenuOnDate(DateTimeUtil.currentDate());
