@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Vote extends BaseEntity{
 
-    //@JsonIgnore
+    @JsonIgnore
     @ManyToOne(fetch =  FetchType.LAZY)
     @JoinColumn(name = "restaurant_id", nullable = false)
     private Restaurant restaurant;
@@ -28,11 +28,6 @@ public class Vote extends BaseEntity{
 
     @Column(name = "date_time", columnDefinition = "timestamp default now()")
     private LocalDateTime datetime;
-
-    public Vote(Integer id, LocalDateTime datetime) {
-        super(id);
-        this.datetime = datetime;
-    }
 
     public Vote(Integer id, LocalDateTime datetime, Restaurant restaurant, User user) {
         super(id);
