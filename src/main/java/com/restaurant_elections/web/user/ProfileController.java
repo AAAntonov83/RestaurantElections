@@ -4,6 +4,7 @@ import com.restaurant_elections.model.User;
 import com.restaurant_elections.to.UserTo;
 import com.restaurant_elections.util.UsersUtil;
 import com.restaurant_elections.web.AuthUser;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +24,7 @@ import static com.restaurant_elections.util.validation.ValidationUtil.checkNew;
 @RequestMapping(ProfileController.REST_URL)
 @Slf4j
 @AllArgsConstructor
+@Tag(name = "profile controller")
 public class ProfileController extends AbstractUserController{
     static final String REST_URL = "/api/profile";
 

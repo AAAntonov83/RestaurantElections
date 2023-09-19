@@ -11,6 +11,7 @@ import com.restaurant_elections.to.MenuTo;
 import com.restaurant_elections.util.MenusUtil;
 import com.restaurant_elections.web.AuthUser;
 import com.restaurant_elections.web.restaurant.AdminRestaurantController;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -33,6 +34,7 @@ import static com.restaurant_elections.util.validation.ValidationUtil.checkNew;
 @RequestMapping(AdminMenuController.REST_URL)
 @Slf4j
 @AllArgsConstructor
+@Tag(name = "admin menu controller")
 public class AdminMenuController {
     public static final String REST_URL = AdminRestaurantController.REST_URL + "/{restaurantId}/menus";
     private final RestaurantRepository restaurantRepository;

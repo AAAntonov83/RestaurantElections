@@ -3,6 +3,7 @@ package com.restaurant_elections.web.restaurant;
 import com.restaurant_elections.model.Restaurant;
 import com.restaurant_elections.repository.RestaurantRepository;
 import com.restaurant_elections.util.JsonUtil;
+import com.restaurant_elections.util.RestaurantsUtil;
 import com.restaurant_elections.web.AbstractControllerTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +43,7 @@ public class AdminRestaurantControllerTest extends AbstractControllerTest {
         Restaurant restaurant = RestaurantTestData.getNew();
         ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(restaurant)))
+                .content(JsonUtil.writeValue(RestaurantsUtil.createTo(restaurant))))
                 .andExpect(status().isCreated());
 
         Restaurant created = RESTAURANT_MATCHER.readFromJson(action);
@@ -58,7 +59,7 @@ public class AdminRestaurantControllerTest extends AbstractControllerTest {
         Restaurant restaurant = new Restaurant(null, "<script>alert(123)</script>");
         perform(MockMvcRequestBuilders.post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(restaurant)))
+                .content(JsonUtil.writeValue(RestaurantsUtil.createTo(restaurant))))
                 .andExpect(status().isUnprocessableEntity());
     }
 
@@ -86,7 +87,7 @@ public class AdminRestaurantControllerTest extends AbstractControllerTest {
         updated.setId(null);
         perform(MockMvcRequestBuilders.put(REST_URL_SLASH + RESTAURANT_1_ID)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(updated)))
+                .content(JsonUtil.writeValue(RestaurantsUtil.createTo(updated))))
                 .andDo(print())
                 .andExpect(status().isNoContent());
 
@@ -100,7 +101,7 @@ public class AdminRestaurantControllerTest extends AbstractControllerTest {
         updated.setId(null);
         perform(MockMvcRequestBuilders.put(REST_URL_SLASH +  RESTAURANT_NOT_FOUND_ID)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(updated)))
+                .content(JsonUtil.writeValue(RestaurantsUtil.createTo(updated))))
                 .andDo(print())
                 .andExpect(status().isNotFound());
     }

@@ -6,6 +6,7 @@ import com.restaurant_elections.repository.MenuRepository;
 import com.restaurant_elections.repository.RestaurantRepository;
 import com.restaurant_elections.util.DateTimeUtil;
 import com.restaurant_elections.web.AuthUser;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -23,6 +24,7 @@ import java.util.Optional;
 @RequestMapping(RestaurantController.REST_URL)
 @Slf4j
 @AllArgsConstructor
+@Tag(name = "restaurant controller")
 public class RestaurantController {
     public static final String REST_URL = "/api/restaurants";
     private final RestaurantRepository restaurantRepository;

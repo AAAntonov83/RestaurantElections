@@ -1,10 +1,11 @@
 package com.restaurant_elections.web.restaurant;
 
 import com.restaurant_elections.model.Restaurant;
-import com.restaurant_elections.repository.MenuRepository;
 import com.restaurant_elections.repository.RestaurantRepository;
-import com.restaurant_elections.repository.VoteRepository;
+import com.restaurant_elections.to.RestaurantTo;
+import com.restaurant_elections.util.RestaurantsUtil;
 import com.restaurant_elections.web.AuthUser;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,24 +27,23 @@ import static com.restaurant_elections.util.validation.ValidationUtil.checkNew;
 @RequestMapping(AdminRestaurantController.REST_URL)
 @Slf4j
 @AllArgsConstructor
+@Tag(name = "admin restaurant controller")
 public class AdminRestaurantController {
     public static final String REST_URL = "/api/admin/restaurants";
     private final RestaurantRepository restaurantRepository;
-    private final MenuRepository menuRepository;
-    private final VoteRepository voteRepository;
 
     @GetMapping()
-    public List<Restaurant> getAll(@AuthenticationPrincipal AuthUser authUser) {
+    public List<RestaurantTo> getAll(@AuthenticationPrincipal AuthUser authUser) {
         log.info("find all restaurants for {}", authUser);
-        return restaurantRepository.findAll();
+        return RestaurantsUtil.getTos(restaurantRepository.findAll());
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Restaurant> create(@AuthenticationPrincipal AuthUser authUser, @Valid @RequestBody Restaurant restaurant) {
-        log.info("Restaurant {} created by user {}", restaurant, authUser);
-        checkNew(restaurant);
-        Restaurant created = restaurantRepository.save(restaurant);
+    public ResponseEntity<Restaurant> create(@AuthenticationPrincipal AuthUser authUser, @Valid @RequestBody RestaurantTo restaurantTo) {
+        log.info("Restaurant {} created by user {}", restaurantTo, authUser);
+        checkNew(restaurantTo);
+        Restaurant created = restaurantRepository.save(RestaurantsUtil.createNewFromTo(restaurantTo));
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(RestaurantController.REST_URL + "/{id}")
                 .buildAndExpand(created.getId()).toUri();
@@ -53,16 +53,14 @@ public class AdminRestaurantController {
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Transactional
-    public void update(@AuthenticationPrincipal AuthUser authUser, @PathVariable int id, @Valid @RequestBody Restaurant updated) {
+    public void update(@AuthenticationPrincipal AuthUser authUser, @PathVariable int id, @Valid @RequestBody RestaurantTo updated) {
         log.info("Restaurant {} update by user {}", updated, authUser.id());
         assureIdConsistent(updated, id);
-        Restaurant restaurant = restaurantRepository.getExisted(id);
-        restaurant.setName(updated.getName());
+        RestaurantsUtil.updateFromTo(restaurantRepository.getExisted(id), updated);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @Transactional
     public void delete(@AuthenticationPrincipal AuthUser authUser, @PathVariable int id) {
         log.info("Restaurant id={} delete by {}", id, authUser);
         restaurantRepository.deleteExisted(id);

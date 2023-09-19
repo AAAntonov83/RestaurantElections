@@ -1,6 +1,7 @@
 package com.restaurant_elections.web.user;
 
 import com.restaurant_elections.model.User;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
@@ -22,6 +23,7 @@ import static com.restaurant_elections.util.validation.ValidationUtil.checkNew;
 @RestController
 @RequestMapping(AdminUserController.REST_URL)
 @Slf4j
+@Tag(name = "admin user controller")
 public class AdminUserController extends AbstractUserController {
     static final String REST_URL = "/api/admin/users";
 

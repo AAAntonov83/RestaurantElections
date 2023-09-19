@@ -9,6 +9,7 @@ import com.restaurant_elections.repository.VoteRepository;
 import com.restaurant_elections.to.VoteTo;
 import com.restaurant_elections.util.DateTimeUtil;
 import com.restaurant_elections.web.AuthUser;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -28,6 +29,7 @@ import static com.restaurant_elections.web.restaurant.RestaurantController.REST_
 @RequestMapping(REST_URL)
 @Slf4j
 @AllArgsConstructor
+@Tag(name = "vote controller")
 public class VoteController {
     private final VoteRepository voteRepository;
     private final RestaurantRepository restaurantRepository;
@@ -75,6 +77,5 @@ public class VoteController {
             throw new IllegalRequestDataException("Voice update is possible until 11 am.");
         }
         vote.setRestaurant(restaurant);
-        //voteRepository.save(newVote);
     }
 }

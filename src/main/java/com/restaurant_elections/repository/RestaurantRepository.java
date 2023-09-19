@@ -13,9 +13,9 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public interface RestaurantRepository extends BaseRepository<Restaurant> {
 
-    @Query("SELECT m.restaurant FROM Menu m WHERE m.date = :date")
+    @Query("SELECT r FROM Restaurant r RIGHT JOIN FETCH r.menus m WHERE m.date = :date")
     List<Restaurant> findAllWithMenuOnDate(LocalDate date);
 
-    @Query("SELECT m.restaurant FROM Menu m WHERE m.date = :date AND m.restaurant.id = :id")
+    @Query("SELECT r FROM Restaurant r RIGHT JOIN FETCH r.menus m WHERE r.id = :id AND m.date = :date")
     Optional<Restaurant> getByIdWithMenuOnDateOnly(int id, LocalDate date);
 }

@@ -5,6 +5,7 @@ import com.restaurant_elections.model.Dish;
 import com.restaurant_elections.repository.DishRepository;
 import com.restaurant_elections.web.AuthUser;
 import com.restaurant_elections.web.restaurant.AdminRestaurantController;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -26,6 +27,7 @@ import static com.restaurant_elections.util.validation.ValidationUtil.checkNew;
 @RequestMapping(AdminDishController.REST_URL)
 @Slf4j
 @AllArgsConstructor
+@Tag(name = "admin dish controller")
 public class AdminDishController {
     static final String REST_URL = AdminRestaurantController.REST_URL + "/{restaurantId}/dishes";
     private final DishRepository dishRepository;
