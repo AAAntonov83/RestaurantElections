@@ -38,6 +38,6 @@ public class Vote extends BaseEntity{
 
     @Override
     public String toString() {
-        return "Vote: " + id + ", user " + user + ", datetime=" + datetime;
+        return "Vote: " + id + ", datetime=" + datetime;
     }
 }
